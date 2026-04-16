@@ -182,8 +182,16 @@ class MiMotionRunner:
         if app_token is None:
             return "登陆失败！", False
 
-        step = str(random.randint(min_step, max_step))
-        self.log_str += f"已设置为随机步数范围({min_step}~{max_step}) 随机值:{step}\n"
+        # ========== 修改点：优先使用手动输入的固定步数 ==========
+        target = os.environ.get('TARGET_STEPS')
+        if target and target.isdigit():
+            step = str(int(target))
+            self.log_str += f"已设置为手动固定步数：{step}\n"
+        else:
+            step = str(random.randint(min_step, max_step))
+            self.log_str += f"已设置为随机步数范围({min_step}~{max_step}) 随机值:{step}\n"
+        # =================================================
+
         ok, msg = zeppHelper.post_fake_brand_data(step, app_token, self.user_id)
         return f"修改步数（{step}）[" + msg + "]", ok
 
