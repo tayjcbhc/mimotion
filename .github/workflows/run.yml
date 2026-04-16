@@ -2,6 +2,11 @@ name: 刷步数
 
 on:
   workflow_dispatch:
+    inputs:
+      target_steps:
+        description: '请输入目标步数'
+        required: true
+        default: '25000'
 
 jobs:
   build:
@@ -19,6 +24,7 @@ jobs:
       - name: 开始刷步数
         env:
           CONFIG: ${{ secrets.CONFIG }}
+          TARGET_STEPS: ${{ github.event.inputs.target_steps }}
         run: |
           pip3 install requests pytz pycryptodome
           python3 main.py
